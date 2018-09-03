@@ -32,6 +32,7 @@ func NewCacher(engine common.Engine, maxQueueSize int, maxWorkers int) Cacher {
 
 func (c cacher) get(key string, expires time.Time, regenerate func() ([]byte, error)) (data []byte, err error) {
 	if c.engine.Exists(key) {
+		pp.Println("exist")
 		data, err = c.engine.Get(key)
 
 		// Return, something went wrong
