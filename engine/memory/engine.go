@@ -78,7 +78,7 @@ func (e *Engine) IsExpired(key string) bool {
 	defer storeLock.RUnlock()
 
 	if time.Now().After(e.expire[key]) {
-		go e.Expire(key)
+// 		go e.Expire(key)
 		return true
 	}
 
@@ -148,7 +148,9 @@ func (e *Engine) cleanupExpiredKeys() {
 			storeLock.RLock()
 			for k := range e.expire {
 				//If the key has expired it will be cleared by this call
-				e.IsExpired(k)
+				if e.IsExpired(k) {
+					go e.Expire(k)
+				}
 			}
 			storeLock.RUnlock()
 		}
